@@ -1,17 +1,34 @@
 package com.tpodontologia.backend.controller;
 
 import com.tpodontologia.backend.model.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.tpodontologia.backend.repository.UserRepository;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("user")
 public class UserController {
 
-    @PostMapping
-    public void save(User user){
-        System.out.println(user);
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping("/create")
+    public ResponseEntity<User> saveUser(@RequestBody @Valid User user){
+        return ResponseEntity.ok(userRepository.save(user));
+    }
+
+    @GetMapping("/{id}")
+    public Optional<User> findById (@PathVariable Long id){
+        return userRepository.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUserById (@PathVariable  Long id){
+        userRepository.deleteById(id);
     }
 
 }
